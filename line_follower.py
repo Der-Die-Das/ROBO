@@ -19,11 +19,11 @@ LOWER_YELLOW = np.array([20, 100, 100])
 UPPER_YELLOW = np.array([30, 255, 255])
 
 # Speed constraints and thresholds (all speeds in metres per second)
-WHEEL_SPEED_MIN = 0.1
-WHEEL_SPEED_MAX = 0.6
-HIGH_ERROR_THRESHOLD = 0.4
+WHEEL_SPEED_MIN = 0.0
+WHEEL_SPEED_MAX = 1.0
+HIGH_ERROR_THRESHOLD = 0.2
 LOW_SPEED = 0.3
-HIGH_SPEED = 0.5
+HIGH_SPEED = 0.8
 
 class LineFollower:
     def __init__(self, robot_name):
@@ -177,7 +177,7 @@ class LineFollower:
         vel_left = np.clip(speed + pid_output, WHEEL_SPEED_MIN, WHEEL_SPEED_MAX)
         vel_right = np.clip(speed - pid_output, WHEEL_SPEED_MIN, WHEEL_SPEED_MAX)
 
-        rospy.loginfo(f"PID output: {pid_output:.2f}, Left speed: {vel_left:.2f}, Right speed: {vel_right:.2f}")
+        rospy.loginfo(f"Error: {abs(error):.2f} PID output: {pid_output:.2f}, Left speed: {vel_left:.2f}, Right speed: {vel_right:.2f}")
         return vel_left, vel_right
 
     def set_wheel_speed(self, left, right):
