@@ -11,19 +11,21 @@ from std_msgs.msg import Header
 # Constant definitions (all speeds in metres per second)
 KP = 0.2         # Proportional gain (scales current error)
 KI = 0.003       # Integral gain (accumulates past errors)
-KD = 0.0015         # Derivative gain (predicts future error)
+KD = 0.002         # Derivative gain (predicts future error)
 
-IMAGE_HEIGHT = 0.3
+IMAGE_HEIGHT = 0.4
 LOWER_YELLOW = np.array([20, 100, 100])
 UPPER_YELLOW = np.array([30, 255, 255])
 
 WHEEL_SPEED_MIN = 0.0
 WHEEL_SPEED_MAX = 2
 MINIMUM_ERROR_THRESHOLD = 0.1
-MAXIMUM_ERROR_THRESHOLD = 0.6
+MAXIMUM_ERROR_THRESHOLD = 0.7
 
-LOW_SPEED = 0.4
-HIGH_SPEED = 1.0
+LOW_SPEED = 0.5
+HIGH_SPEED = 1.4
+
+HERTZ = 60
 
 class LineFollower:
     def __init__(self, robot_name):
@@ -45,13 +47,13 @@ class LineFollower:
         rospy.Subscriber(f'/{robot_name}/camera_node/image/compressed', CompressedImage, self.image_callback, queue_size=1, buff_size=2**30)
 
         rospy.on_shutdown(self.stop_robot)
-        self.rate = rospy.Rate(20)
+        self.rate = rospy.Rate(HERTZ)
         rospy.sleep(2.0)  # Allow time for sensor and topic initialization
 
         # Variables for lap timing via blue pixel detection
         self.in_lap = False
         self.lap_start_time = None
-        self.BLUE_PIXEL_THRESHOLD = 2000  # Adjust this threshold based on your environment
+        self.BLUE_PIXEL_THRESHOLD = 1500  # Adjust this threshold based on your environment
 
         # Use a class member for blue_mask instead of a global variable.
         self.blue_mask = None
@@ -210,6 +212,7 @@ class LineFollower:
             MAXIMUM_ERROR_THRESHOLD,
             LOW_SPEED,
             HIGH_SPEED,
+            HERTZ,
         ]
         write_header = not os.path.isfile(csv_file) or os.stat(csv_file).st_size == 0
         with open(csv_file, "a") as f:
@@ -217,7 +220,8 @@ class LineFollower:
             if write_header:
                 writer.writerow([
                     "timestamp", "lap_time", "kp", "ki", "kd", "BLUE_PIXEL_THRESHOLD",
-                    "MINIMUM_ERROR_THRESHOLD", "MAXIMUM_ERROR_THRESHOLD", "LOW_SPEED", "HIGH_SPEED"
+                    "MINIMUM_ERROR_THRESHOLD", "MAXIMUM_ERROR_THRESHOLD", "LOW_SPEED", "HIGH_SPEED",
+                    "HERTZ"
                 ])
             writer.writerow(row)
 
