@@ -1,0 +1,10 @@
+services:
+  ros:
+    build: .
+    network_mode: host
+    command: tail -f /dev/null
+    volumes:
+      - code:/code/catkin_ws/src/duckie-lab
+
+volumes:
+  code:
