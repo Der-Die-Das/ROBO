@@ -1,5 +1,5 @@
 {
     "docker.environment": {
-        "DOCKER_HOST": "ssh://duckie@phi.local"
+        "DOCKER_HOST": "ssh://duckie@rho.local"
     }
 }
