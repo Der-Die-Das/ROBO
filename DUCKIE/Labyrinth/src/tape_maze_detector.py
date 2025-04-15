@@ -27,7 +27,7 @@ class TapeMazeDetector:
                  border_crop_pixels: int = 5,
                  angle_tolerance: float = 25.0,
                  forward_top_threshold_px: int = 50,
-                 mask_crop_percentage: float = 30.0,
+                 mask_crop_percentage: float = 20.0,
                  mask_lower_threshold: int = 130,
                  # --- Additional parameters inferred from typical processing ---
                  hough_rho: float = 1.0,                # Distance resolution of the accumulator in pixels.
@@ -212,7 +212,7 @@ class TapeMazeDetector:
         height, width, _ = frame.shape
         crop_height_pixels = int(height * (self.mask_crop_percentage / 100.0))
         start_row = max(0, height - crop_height_pixels)
-        lower_region_bgr = frame[start_row:height, :]
+        lower_region_bgr = frame[start_row:height, int(width*0.2):int(width*0.8)]
 
         mask_raw = None
         if lower_region_bgr.shape[0] > 0 and lower_region_bgr.shape[1] > 0:

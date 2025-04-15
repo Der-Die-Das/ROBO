@@ -7,3 +7,4 @@ class State(Enum):
     STOPPED_AT_JUNCTION = 2 # Robot is stopped at a junction, deciding direction
     TURNING = 3             # Robot is executing a turn
     ERROR = 4               # Robot encountered an unrecoverable error
+    DRIVING_INTO_JUNCTION = 5

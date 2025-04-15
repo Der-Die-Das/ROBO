@@ -1,5 +1,5 @@
 services:
-  ros:
+  ros-dani:
     build: .
     network_mode: host
     command: tail -f /dev/null

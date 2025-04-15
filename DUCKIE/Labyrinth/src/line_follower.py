@@ -10,7 +10,9 @@ class SimpleLineFollower:
     def __init__(self, kp, img_width):
         self.kp = kp                  # Proportional gain
         self.img_width = img_width    # Width of the input image for centering calculation
-        self.image_center_x = self.img_width / 2.0
+        self.width_percentage = 0.8
+        self.height_percentage = 0.3
+        self.image_center_x = self.img_width*self.width_percentage / 2.0
 
     def calculate_angular_velocity(self, frame):
         """
@@ -38,7 +40,10 @@ class SimpleLineFollower:
 
         # Example: find white pixels centroid in bottom part of image
         # TODO: This mask and ROI might need tuning based on TapeMazeDetector's needs
-        roi = frame[h // 2:, :] # Look at bottom half
+        w_1 = int((self.width_percentage//2)* self.img_width)
+        w_2 = int((1-(self.width_percentage//2))* self.img_width)
+        h_1 = int((self.height_percentage)* h)
+        roi = frame[h//2:, w_1:w_2] # Look at bottom half
         mask = cv2.inRange(roi, (150, 150, 150), (255, 255, 255)) # Simple white mask
 
         M = cv2.moments(mask)
