@@ -1,0 +1,28 @@
+services:
+  ros-dani:
+    build: .
+    network_mode: host
+    environment:
+      - ROS_MASTER_URI=http://192.168.1.110:11311
+    depends_on:
+      - iviz-dani
+    volumes:
+      - /home/robo/real_robot.launch:/root/catkin_ws/src/ur-lab/launch/real_robot.launch
+      - code:/root/catkin_ws/src/ur-lab
+    command: tail -f /dev/null
+
+  iviz-dani:
+    build: ./iviz
+    restart: always
+    network_mode: host
+    environment:
+      - ROS_MASTER_URI=http://192.168.1.110:11311
+    command: 
+      - /bin/sh
+      - -c
+      - |
+        roscore
+        /root/iviz/iviz_model_service/Binaries/linux-x64/Iviz.ModelService
+
+volumes:
+   code:
